@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const protect = async (req, res, next) => {
+const requireAuth = async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -20,5 +20,15 @@ const protect = async (req, res, next) => {
         res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
+const requireRole = (role) => {
+    return (req, res, next) => {
+        if (req.user.role !== role) {
+            return res.status(403).json({
+                message: `Not permitted. This action requires the ${role} role.`
+            });
+        }
+        next();
+    };
+};
 
-module.exports = { protect };
+module.exports = { requireAuth, requireRole };
