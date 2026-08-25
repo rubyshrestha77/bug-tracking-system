@@ -30,4 +30,16 @@ const createBug = async (req, res) => {
     }
 };
 
-module.exports = { createBug };
+const getBugs = async (req, res) => {
+    try {
+        const bugs = await Bug.find()
+            .populate('reporter', 'name')
+            .populate('assignee', 'name')
+            .sort({ createdAt: -1 });
+        res.status(200).json(bugs);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs };
