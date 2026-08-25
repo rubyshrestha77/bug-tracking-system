@@ -1,13 +1,8 @@
 const express = require('express');
 const { requireAuth, requireRole } = require('../middleware/authMiddleware');
+const { createBug } = require('../controllers/bugController');
 const router = express.Router();
 
-router.post('/', requireAuth, requireRole('reporter'), (req, res) => {
-    res.status(200).json({ message: 'Reporter-only endpoint reached' });
-});
-
-router.patch('/:id/triage', requireAuth, requireRole('developer'), (req, res) => {
-    res.status(200).json({ message: 'Developer-only endpoint reached' });
-});
+router.post('/', requireAuth, requireRole('reporter'), createBug);
 
 module.exports = router;
