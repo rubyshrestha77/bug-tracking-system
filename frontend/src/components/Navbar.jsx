@@ -17,6 +17,7 @@ const Navbar = () => {
         {user ? (
           <>
             <Link to="/bugs" className="mr-4">Bugs</Link>
+            {user.role === 'reporter' && <Link to="/bugs/new" className="mr-4">New Bug</Link>}
             <Link to="/profile" className="mr-4">
               <span className="text-sm">
                 {user.name} ({user.role})
