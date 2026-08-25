@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NewBug from './pages/NewBug';
 import Bugs from './pages/Bugs';
+import BugDetail from './pages/BugDetail';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/bugs/new" element={<NewBug />} />
         <Route path="/bugs" element={<Bugs/>} />
+        <Route path="/bugs/:id" element={<BugDetail />} />
       </Routes>
     </Router>
   );

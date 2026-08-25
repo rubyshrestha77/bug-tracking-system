@@ -42,4 +42,23 @@ const getBugs = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs };
+const getBugById = async (req, res) => {
+    try {
+        const bug = await Bug.findById(req.params.id)
+            .populate('reporter', 'name')
+            .populate('assignee', 'name');
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        res.status(200).json(bug);
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById };
