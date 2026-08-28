@@ -42,6 +42,18 @@ const BugDetail = () => {
   }
 };
 
+const handleStartWork = async () => {
+  setActionError('');
+  try {
+    const response = await axiosInstance.patch(
+      `/api/bugs/${id}/start`, {},
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    setBug(response.data);
+  } catch (error) {
+    setActionError(error.response?.data?.message || 'Failed to start work.');
+  }
+};
   useEffect(() => {
     const fetchBug = async () => {
       try {
@@ -137,6 +149,16 @@ const BugDetail = () => {
           </div>
         )}
 
+        {user.role === 'developer' &&
+        bug.assignee?._id === user.id &&
+        (bug.status === 'Assigned' || bug.status === 'Reopened') && (
+          <div className="border-t pt-4 mt-4">
+            {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
+            <button onClick={handleStartWork} className="bg-yellow-600 text-white px-4 py-2 rounded">
+              Start Work
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

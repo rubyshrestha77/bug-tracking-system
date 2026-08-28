@@ -99,4 +99,40 @@ const assignBug = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs, getBugById, assignBug};
+const startWork = async (req, res) => {
+    try {
+        const bug = await Bug.findById(req.params.id);
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        if (!bug.assignee || bug.assignee.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'Only the assigned developer can start work on this bug'
+            });
+        }
+
+        if (bug.status !== 'Assigned' && bug.status !== 'Reopened') {
+            return res.status(422).json({
+                message: 'Only assigned or reopened bugs can be moved to In Progress'
+            });
+        }
+
+        bug.status = 'In Progress';
+        await bug.save();
+
+        const updated = await Bug.findById(bug._id)
+            .populate('reporter', 'name')
+            .populate('assignee', 'name');
+
+        res.status(200).json(updated);
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById, assignBug, startWork};
