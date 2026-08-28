@@ -28,6 +28,7 @@ const BugDetail = () => {
   const [priority, setPriority] = useState('');
   const [actionError, setActionError] = useState('');
   const [resolutionNote, setResolutionNote] = useState('');
+  const [reopenReason, setReopenReason] = useState('');
 
   const handleAssign = async () => {
   setActionError('');
@@ -41,48 +42,63 @@ const BugDetail = () => {
   } catch (error) {
     setActionError(error.response?.data?.message || 'Failed to assign bug.');
   }
-};
+  };
 
-const handleStartWork = async () => {
-  setActionError('');
-  try {
-    const response = await axiosInstance.patch(
-      `/api/bugs/${id}/start`, {},
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    setBug(response.data);
-  } catch (error) {
-    setActionError(error.response?.data?.message || 'Failed to start work.');
-  }
-};
+  const handleStartWork = async () => {
+    setActionError('');
+    try {
+      const response = await axiosInstance.patch(
+        `/api/bugs/${id}/start`, {},
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setBug(response.data);
+    } catch (error) {
+      setActionError(error.response?.data?.message || 'Failed to start work.');
+    }
+  };
 
-const handleResolve = async () => {
-  setActionError('');
-  try {
-    const response = await axiosInstance.patch(
-      `/api/bugs/${id}/resolve`,
-      { resolutionNote },
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    setBug(response.data);
-    setResolutionNote('');
-  } catch (error) {
-    setActionError(error.response?.data?.message || 'Failed to resolve bug.');
-  }
-};
+  const handleResolve = async () => {
+    setActionError('');
+    try {
+      const response = await axiosInstance.patch(
+        `/api/bugs/${id}/resolve`,
+        { resolutionNote },
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setBug(response.data);
+      setResolutionNote('');
+    } catch (error) {
+      setActionError(error.response?.data?.message || 'Failed to resolve bug.');
+    }
+  };
 
-const handleVerify = async () => {
-  setActionError('');
-  try {
-    const response = await axiosInstance.patch(
-      `/api/bugs/${id}/verify`, {},
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    setBug(response.data);
-  } catch (error) {
-    setActionError(error.response?.data?.message || 'Failed to verify bug.');
-  }
-};
+  const handleVerify = async () => {
+    setActionError('');
+    try {
+      const response = await axiosInstance.patch(
+        `/api/bugs/${id}/verify`, {},
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setBug(response.data);
+    } catch (error) {
+      setActionError(error.response?.data?.message || 'Failed to verify bug.');
+    }
+  };
+
+  const handleReopen = async () => {
+    setActionError('');
+    try {
+      const response = await axiosInstance.patch(
+        `/api/bugs/${id}/reopen`,
+        { reopenReason },
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setBug(response.data);
+      setReopenReason('');
+    } catch (error) {
+      setActionError(error.response?.data?.message || 'Failed to reopen bug.');
+    }
+  };
 
   useEffect(() => {
     const fetchBug = async () => {
@@ -221,6 +237,20 @@ const handleVerify = async () => {
             <button onClick={handleVerify} className="bg-green-600 text-white px-4 py-2 rounded">
               Verify and Close
             </button>
+
+            <div className="mt-4 pt-4 border-t">
+              <p className="text-sm text-gray-600 mb-2">Still not fixed?</p>
+              <textarea
+                rows="2"
+                placeholder="Why are you reopening this bug?"
+                value={reopenReason}
+                onChange={(e) => setReopenReason(e.target.value)}
+                className="w-full mb-3 p-2 border rounded"
+              />
+              <button onClick={handleReopen} className="bg-orange-600 text-white px-4 py-2 rounded">
+                Reopen Bug
+              </button>
+            </div>
           </div>
         )}
       </div>
