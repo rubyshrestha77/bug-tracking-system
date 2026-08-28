@@ -27,6 +27,7 @@ const BugDetail = () => {
   const [loading, setLoading] = useState(true);
   const [priority, setPriority] = useState('');
   const [actionError, setActionError] = useState('');
+  const [resolutionNote, setResolutionNote] = useState('');
 
   const handleAssign = async () => {
   setActionError('');
@@ -52,6 +53,21 @@ const handleStartWork = async () => {
     setBug(response.data);
   } catch (error) {
     setActionError(error.response?.data?.message || 'Failed to start work.');
+  }
+};
+
+const handleResolve = async () => {
+  setActionError('');
+  try {
+    const response = await axiosInstance.patch(
+      `/api/bugs/${id}/resolve`,
+      { resolutionNote },
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    setBug(response.data);
+    setResolutionNote('');
+  } catch (error) {
+    setActionError(error.response?.data?.message || 'Failed to resolve bug.');
   }
 };
   useEffect(() => {
@@ -156,6 +172,25 @@ const handleStartWork = async () => {
             {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
             <button onClick={handleStartWork} className="bg-yellow-600 text-white px-4 py-2 rounded">
               Start Work
+            </button>
+          </div>
+        )}
+
+        {user.role === 'developer' &&
+        bug.assignee?._id === user.id &&
+        bug.status === 'In Progress' && (
+          <div className="border-t pt-4 mt-4">
+            <h2 className="font-semibold mb-3">Resolve Bug</h2>
+            <textarea
+              rows="3"
+              placeholder="What did you change to fix this?"
+              value={resolutionNote}
+              onChange={(e) => setResolutionNote(e.target.value)}
+              className="w-full mb-3 p-2 border rounded"
+            />
+            {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
+            <button onClick={handleResolve} className="bg-green-600 text-white px-4 py-2 rounded">
+              Mark as Resolved
             </button>
           </div>
         )}
