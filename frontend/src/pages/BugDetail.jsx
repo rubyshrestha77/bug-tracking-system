@@ -100,6 +100,19 @@ const BugDetail = () => {
     }
   };
 
+  const handleDelete = async () => {
+  if (!window.confirm('Delete this bug report? This cannot be undone.')) return;
+  setActionError('');
+  try {
+    await axiosInstance.delete(`/api/bugs/${id}`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    navigate('/bugs');
+  } catch (error) {
+    setActionError(error.response?.data?.message || 'Failed to delete bug.');
+  }
+};
+
   useEffect(() => {
     const fetchBug = async () => {
       try {
@@ -251,6 +264,21 @@ const BugDetail = () => {
                 Reopen Bug
               </button>
             </div>
+          </div>
+        )}
+
+        {user.role === 'reporter' &&
+        bug.reporter?._id === user.id &&
+        bug.status === 'New' && (
+          <div className="border-t pt-4 mt-4">
+            <h2 className="font-semibold mb-2">Withdraw Report</h2>
+            <p className="text-sm text-gray-600 mb-3">
+              You can delete this report while no developer has picked it up.
+            </p>
+            {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
+            <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded">
+              Delete Bug
+            </button>
           </div>
         )}
       </div>
