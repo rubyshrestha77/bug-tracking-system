@@ -179,4 +179,41 @@ const resolveBug = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug};
+const verifyBug = async (req, res) => {
+    try {
+        const bug = await Bug.findById(req.params.id);
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        if (bug.reporter.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'Only the reporter who raised this bug can verify it'
+            });
+        }
+
+        if (bug.status !== 'Resolved') {
+            return res.status(422).json({
+                message: 'Only resolved bugs can be verified'
+            });
+        }
+
+        bug.verifiedAt = new Date();
+        bug.status = 'Closed';
+        await bug.save();
+
+        const updated = await Bug.findById(bug._id)
+            .populate('reporter', 'name')
+            .populate('assignee', 'name');
+
+        res.status(200).json(updated);
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug, verifyBug};
