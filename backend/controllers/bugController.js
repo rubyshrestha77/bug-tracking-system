@@ -61,4 +61,42 @@ const getBugById = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs, getBugById };
+const assignBug = async (req, res) => {
+    const { priority } = req.body;
+
+    if (!['High', 'Medium', 'Low'].includes(priority)) {
+        return res.status(400).json({ message: 'Priority is required' });
+    }
+
+    try {
+        const bug = await Bug.findById(req.params.id);
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        if (bug.status !== 'New') {
+            return res.status(422).json({
+                message: 'Only bugs with status New can be assigned'
+            });
+        }
+
+        bug.priority = priority;
+        bug.assignee = req.user.id;
+        bug.status = 'Assigned';
+        await bug.save();
+
+        const updated = await Bug.findById(bug._id)
+            .populate('reporter', 'name')
+            .populate('assignee', 'name');
+
+        res.status(200).json(updated);
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById, assignBug};

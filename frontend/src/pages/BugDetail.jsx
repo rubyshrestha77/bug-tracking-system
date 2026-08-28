@@ -25,6 +25,22 @@ const BugDetail = () => {
   const [bug, setBug] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [priority, setPriority] = useState('');
+  const [actionError, setActionError] = useState('');
+
+  const handleAssign = async () => {
+  setActionError('');
+  try {
+    const response = await axiosInstance.patch(
+      `/api/bugs/${id}/assign`,
+      { priority },
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    setBug(response.data);
+  } catch (error) {
+    setActionError(error.response?.data?.message || 'Failed to assign bug.');
+  }
+};
 
   useEffect(() => {
     const fetchBug = async () => {
@@ -98,6 +114,29 @@ const BugDetail = () => {
           </>
         )}
         
+        {user.role === 'developer' && bug.status === 'New' && (
+          <div className="border-t pt-4 mt-4">
+            <h2 className="font-semibold mb-3">Review and Assign</h2>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="w-full mb-3 p-2 border rounded"
+            >
+              <option value="">Select priority</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+            {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
+            <button
+              onClick={handleAssign}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Assign to me
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );
