@@ -259,4 +259,34 @@ const reopenBug = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug, verifyBug, reopenBug};
+const deleteBug = async (req, res) => {
+    try {
+        const bug = await Bug.findById(req.params.id);
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        if (bug.reporter.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'Only the reporter who raised this bug can delete it'
+            });
+        }
+
+        if (bug.status !== 'New') {
+            return res.status(422).json({
+                message: 'This bug cannot be deleted because work has already begun on it'
+            });
+        }
+
+        await bug.deleteOne();
+        res.status(200).json({ message: 'Bug deleted' });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug, verifyBug, reopenBug, deleteBug};
