@@ -12,6 +12,7 @@ const bugSchema = new mongoose.Schema({
     resolutionNote: { type: String, default: null },
     reopenReason: { type: String, default: null },
     resolvedAt: { type: Date, default: null },
+    verifiedAt: { type: Date, default: null },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Bug', bugSchema);  

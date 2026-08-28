@@ -70,6 +70,20 @@ const handleResolve = async () => {
     setActionError(error.response?.data?.message || 'Failed to resolve bug.');
   }
 };
+
+const handleVerify = async () => {
+  setActionError('');
+  try {
+    const response = await axiosInstance.patch(
+      `/api/bugs/${id}/verify`, {},
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    setBug(response.data);
+  } catch (error) {
+    setActionError(error.response?.data?.message || 'Failed to verify bug.');
+  }
+};
+
   useEffect(() => {
     const fetchBug = async () => {
       try {
@@ -191,6 +205,21 @@ const handleResolve = async () => {
             {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
             <button onClick={handleResolve} className="bg-green-600 text-white px-4 py-2 rounded">
               Mark as Resolved
+            </button>
+          </div>
+        )}
+
+        {user.role === 'reporter' &&
+        bug.reporter?._id === user.id &&
+        bug.status === 'Resolved' && (
+          <div className="border-t pt-4 mt-4">
+            <h2 className="font-semibold mb-3">Verify Fix</h2>
+            <p className="text-sm text-gray-600 mb-3">
+              Confirm the defect is resolved, or reopen it if the problem persists.
+            </p>
+            {actionError && <p className="mb-3 text-sm text-red-600">{actionError}</p>}
+            <button onClick={handleVerify} className="bg-green-600 text-white px-4 py-2 rounded">
+              Verify and Close
             </button>
           </div>
         )}
