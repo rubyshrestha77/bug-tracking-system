@@ -216,4 +216,47 @@ const verifyBug = async (req, res) => {
     }
 };
 
-module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug, verifyBug};
+const reopenBug = async (req, res) => {
+    const { reopenReason } = req.body;
+
+    if (!reopenReason || !reopenReason.trim()) {
+        return res.status(400).json({ message: 'Reason for reopening is required' });
+    }
+
+    try {
+        const bug = await Bug.findById(req.params.id);
+
+        if (!bug) {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+
+        if (bug.reporter.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'Only the reporter who raised this bug can reopen it'
+            });
+        }
+
+        if (bug.status !== 'Resolved') {
+            return res.status(422).json({
+                message: 'Only resolved bugs can be reopened'
+            });
+        }
+
+        bug.reopenReason = reopenReason;
+        bug.status = 'Reopened';
+        await bug.save();
+
+        const updated = await Bug.findById(bug._id)
+            .populate('reporter', 'name')
+            .populate('assignee', 'name');
+
+        res.status(200).json(updated);
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Bug not found' });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createBug, getBugs, getBugById, assignBug, startWork, resolveBug, verifyBug, reopenBug};
