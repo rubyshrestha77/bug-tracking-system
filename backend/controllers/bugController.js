@@ -32,10 +32,19 @@ const createBug = async (req, res) => {
 
 const getBugs = async (req, res) => {
     try {
-        const bugs = await Bug.find()
+        const { status, severity, priority, assignedToMe } = req.query;
+        const filter = {};
+
+        if (status) filter.status = status;
+        if (severity) filter.severity = severity;
+        if (priority) filter.priority = priority;
+        if (assignedToMe === 'true') filter.assignee = req.user.id;
+
+        const bugs = await Bug.find(filter)
             .populate('reporter', 'name')
             .populate('assignee', 'name')
             .sort({ createdAt: -1 });
+
         res.status(200).json(bugs);
     } catch (error) {
         res.status(500).json({ message: error.message });

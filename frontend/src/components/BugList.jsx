@@ -21,25 +21,36 @@ const Badge = ({ text, className }) => (
   <span className={`px-2 py-1 rounded text-xs font-medium ${className}`}>{text}</span>
 );
 
-const BugList = ({ bugs }) => {
+const BugList = ({ bugs, hasActiveFilters, onClearFilters }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   if (bugs.length === 0) {
     return (
       <div className="bg-white p-8 shadow-md rounded text-center">
-        <p className="text-gray-600 mb-4">No bugs have been reported yet.</p>
-        {user.role === 'reporter' ? (
-          <button
-            onClick={() => navigate('/bugs/new')}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Report the first bug
-          </button>
+        {hasActiveFilters ? (
+          <>
+            <p className="text-gray-600 mb-4">No bugs match the selected filters.</p>
+            <button onClick={onClearFilters} className="bg-blue-600 text-white px-4 py-2 rounded">
+              Clear filters
+            </button>
+          </>
         ) : (
-          <p className="text-sm text-gray-500">
-            New bug reports will appear here for review.
-          </p>
+          <>
+            <p className="text-gray-600 mb-4">No bugs have been reported yet.</p>
+            {user.role === 'reporter' ? (
+              <button
+                onClick={() => navigate('/bugs/new')}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Report the first bug
+              </button>
+            ) : (
+              <p className="text-sm text-gray-500">
+                New bug reports will appear here for review.
+              </p>
+            )}
+          </>
         )}
       </div>
     );
