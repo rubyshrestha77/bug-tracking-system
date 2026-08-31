@@ -42,6 +42,14 @@ These accounts are not seeded automatically. Register them through the
 application, or use any accounts you create — the role is selected at
 registration.
 
+## Design Prototype
+
+Figma file (view-only):https://www.figma.com/design/s5tfMt6eLPiSmSs4lowXjQ/BugTrackingSystem?node-id=18-925&t=WyqjRDeIbIpD6Hei-1
+Clickable prototype: https://www.figma.com/proto/s5tfMt6eLPiSmSs4lowXjQ/BugTrackingSystem?node-id=23-1122&t=BMhuIwD8ZAO8Ezyc-1
+
+Low-fidelity wireframes are in `docs/wireframes/low-fidelity/`;
+high-fidelity screens in `docs/wireframes/high-fidelity/`.
+
 ## Architecture
 
 A React single-page application communicates with an Express REST API over JSON.
