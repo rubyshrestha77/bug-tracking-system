@@ -31,7 +31,7 @@ const BugList = ({ bugs, hasActiveFilters, onClearFilters }) => {
         {hasActiveFilters ? (
           <>
             <p className="text-gray-600 mb-4">No bugs match the selected filters.</p>
-            <button onClick={onClearFilters} className="bg-blue-600 text-white px-4 py-2 rounded">
+            <button onClick={onClearFilters} className="bg-blue-600 text-white font-semibold px-4 py-2 rounded">
               Clear filters
             </button>
           </>

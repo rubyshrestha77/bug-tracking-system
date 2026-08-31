@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
@@ -39,7 +40,8 @@ const Login = () => {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+        <p className="mt-4 mb-4">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Sign up</Link></p>
+        <button type="submit" className="w-full bg-[#F59457] text-white p-2 rounded">
           Login
         </button>
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}

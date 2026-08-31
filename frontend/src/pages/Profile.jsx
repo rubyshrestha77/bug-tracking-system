@@ -76,7 +76,7 @@ const Profile = () => {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+        <button type="submit" className="w-full bg-[#F59457] text-white p-2 rounded">
           {loading ? 'Updating...' : 'Update Profile'}
         </button>
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
