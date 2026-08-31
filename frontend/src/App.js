@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import NewBug from './pages/NewBug';
 import Bugs from './pages/Bugs';
 import BugDetail from './pages/BugDetail';
+import ProtectedRoute from './components/ProtectedRoutes';
 
 function App() {
   return (
@@ -14,10 +15,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/bugs/new" element={<NewBug />} />
-        <Route path="/bugs" element={<Bugs/>} />
-        <Route path="/bugs/:id" element={<BugDetail />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/bugs/new" element={<ProtectedRoute><NewBug /></ProtectedRoute>} />
+        <Route path="/bugs" element={<ProtectedRoute><Bugs/></ProtectedRoute>}/>
+        <Route path="/bugs/:id" element={<ProtectedRoute><BugDetail /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
