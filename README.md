@@ -20,15 +20,12 @@ Prerequisites: Node.js 18+, npm, and a MongoDB connection string.
 All commands run from the repository root.
 
 1. Clone the repository
-2. Install dependencies for root, backend and frontend:
-    npm run install-all
-3. Create `backend/.env`:
-    MONGO_URI=<your MongoDB connection string>
-    JWT_SECRET=<any long random string>
-    PORT=5000
-4. Start both servers:
-    npm run start
-
+2. Install dependencies for root, backend and frontend: `npm run install-all`
+3. Create `backend/.env` with the following variables:
+   - `MONGO_URI` — your MongoDB connection string
+   - `JWT_SECRET` — any long random string
+   - `PORT` — 5000
+4. Start both servers: `npm run start`
 
 Frontend runs on `localhost:3000`, backend on `localhost:5000`.
 
@@ -40,6 +37,10 @@ For development with auto-restart on file changes, use `npm run dev` instead.
 |------|-------|----------|
 | Reporter | reporter@demo.com | password123 |
 | Developer | developer@demo.com | password123 |
+
+These accounts are not seeded automatically. Register them through the
+application, or use any accounts you create — the role is selected at
+registration.
 
 ## Architecture
 
