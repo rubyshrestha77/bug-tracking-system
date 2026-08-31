@@ -144,7 +144,7 @@ const BugDetail = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <button onClick={() => navigate('/bugs')} className="text-sm text-blue-600 mb-4">
+      <button onClick={() => navigate('/bugs')} className="text-m text-blue-600 font-semibold mb-4">
         ← Back to list
       </button>
 

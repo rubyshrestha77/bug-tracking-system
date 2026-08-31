@@ -70,7 +70,7 @@ const NewBug = () => {
 
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+        <button type="submit" className="w-full bg-[#F59457] text-white p-2 rounded">
           Submit Bug
         </button>
       </form>

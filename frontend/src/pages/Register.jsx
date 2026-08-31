@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 
@@ -74,7 +75,9 @@ const Register = () => {
         </div>
 
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
+        <p className=" mt-4 mb-4"> Have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link></p>
+        
+        <button type="submit" className="w-full bg-[#F59457] text-white p-2 rounded">
           Register
         </button>
       </form>
